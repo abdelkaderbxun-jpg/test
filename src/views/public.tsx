@@ -525,14 +525,18 @@ export function HomePage() {
             action={<Link to="/articles" className="inline-flex h-11 items-center gap-2 rounded-lg border border-ink-200 bg-white px-5 text-sm font-bold text-ink-600 transition-all hover:border-primary-400 hover:text-primary-700">كل المقالات <IcSend size={16} className="rotate-180" /></Link>}
           />
         </Reveal>
-        <div className="grid gap-6 lg:grid-cols-3">
-          <Reveal className="lg:col-span-2"><ArticleCard a={publishedArticles[0]} big /></Reveal>
-          <div className="grid gap-6">
-            {publishedArticles.slice(1, 3).map((a, i) => (
-              <Reveal key={a.id} delay={120 + i * 120}><ArticleCard a={a} /></Reveal>
-            ))}
+        {publishedArticles.length > 0 ? (
+          <div className="grid gap-6 lg:grid-cols-3">
+            <Reveal className="lg:col-span-2"><ArticleCard a={publishedArticles[0]} big /></Reveal>
+            <div className="grid gap-6">
+              {publishedArticles.slice(1, 3).map((a, i) => (
+                <Reveal key={a.id} delay={120 + i * 120}><ArticleCard a={a} /></Reveal>
+              ))}
+            </div>
           </div>
-        </div>
+        ) : (
+          <EmptyState icon={<IcDoc size={30} />} title="لا مقالات منشورة بعد" desc="أعمال التلاميذ المعتمدة ستظهر هنا قريبًا." />
+        )}
       </section>
 
       {/* ===== كيف تعمل ===== */}

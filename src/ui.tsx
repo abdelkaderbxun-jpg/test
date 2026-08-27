@@ -727,8 +727,15 @@ export function CoverImg({
   className?: string;
   icon?: "code" | "doc";
 }) {
-  const [err, setErr] = useState(false);
-  if (!src || err) {
+  const [state, setState] = useState<"loading" | "ok" | "err">("loading");
+  useEffect(() => {
+    setState("loading");
+    if (!src) return;
+    /* إن تعذّر جلب الصورة خلال 6 ثوانٍ نعرض البديل المرسوم */
+    const t = setTimeout(() => setState((s) => (s === "loading" ? "err" : s)), 6000);
+    return () => clearTimeout(t);
+  }, [src]);
+  if (!src || state === "err") {
     return (
       <div
         role="img"
@@ -752,7 +759,16 @@ export function CoverImg({
       </div>
     );
   }
-  return <img src={src} alt={alt} loading="lazy" onError={() => setErr(true)} className={cx("object-cover", className)} />;
+  return (
+    <img
+      src={src}
+      alt={alt}
+      loading="lazy"
+      onLoad={() => setState("ok")}
+      onError={() => setState("err")}
+      className={cx("object-cover", className)}
+    />
+  );
 }
 
 /* ================== القائمة المنسدلة ================== */
